@@ -1,0 +1,25 @@
+object DataModule2: TDataModule2
+  Height = 192
+  Width = 518
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'Database=postgres'
+      'User_Name=postgres'
+      'Password=postgres'
+      'DriverID=PG')
+    UpdateOptions.AssignedValues = [uvAutoCommitUpdates]
+    LoginPrompt = False
+    Left = 64
+    Top = 64
+  end
+  object FDPhysPgDriverLink1: TFDPhysPgDriverLink
+    VendorHome = 'C:\Git'
+    Left = 232
+    Top = 64
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 408
+    Top = 56
+  end
+end
