@@ -1,0 +1,20 @@
+unit uItensModel;
+
+interface
+
+type
+TItensModel = Class
+  private
+    fcoditem: integer;
+    fcodpedido: integer;
+
+  protected
+  public
+    property coditem integer read fcoditem write fcoditem;
+    property codpedido integer read fcodpedido write fcodpedido;
+    property codproduto integer read fcodproduto write fcodproduto;
+End;
+
+implementation
+
+end.

@@ -7,7 +7,8 @@ uses
   uPedidoModel in 'model\uPedidoModel.pas',
   uPedidoController in 'controller\uPedidoController.pas',
   udmPedido in 'dao\udmPedido.pas' {DataModule1: TDataModule},
-  udmItens in 'dao\udmItens.pas' {DataModule2: TDataModule};
+  udmItens in 'dao\udmItens.pas' {DataModule2: TDataModule},
+  uItensModel in 'model\uItensModel.pas';
 
 {$R *.res}
 

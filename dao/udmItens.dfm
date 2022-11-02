@@ -1,4 +1,100 @@
 object DataModule2: TDataModule2
-  Height = 480
-  Width = 640
+  Height = 164
+  Width = 583
+  object fdqItens: TFDQuery
+    Connection = dmConexao.fdConexao
+    SQL.Strings = (
+      'select *'
+      'from itens'
+      'where codpedido = :pdocpedido;')
+    Left = 56
+    Top = 40
+    ParamData = <
+      item
+        Name = 'PDOCPEDIDO'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
+  object fdqInsert: TFDQuery
+    Connection = dmConexao.fdConexao
+    SQL.Strings = (
+      'insert into itens'
+      '(codpedido,codproduto,quantidade,vlunitario,vlTotal)'
+      'values'
+      '(:pcodpedido,:pcodproduto,:pquantidade,:pvlunitario,:pvlTotal);')
+    Left = 160
+    Top = 40
+    ParamData = <
+      item
+        Name = 'PCODPEDIDO'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'PCODPRODUTO'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'PQUANTIDADE'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'PVLUNITARIO'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'PVLTOTAL'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+  end
+  object fdqUpdate: TFDQuery
+    Connection = dmConexao.fdConexao
+    SQL.Strings = (
+      'update itens set'
+      'codpedido = :pcodpedido,'
+      'codproduto = :pcodproduto,'
+      'quantidade = :pquantidade,'
+      'vlunitario = :pvlunitario,'
+      'vlTotal = :pvlTotal'
+      'where coditem = :pcoditem;')
+    Left = 256
+    Top = 40
+    ParamData = <
+      item
+        Name = 'PCODPEDIDO'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'PCODPRODUTO'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'PQUANTIDADE'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'PVLUNITARIO'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'PVLTOTAL'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'PCODITEM'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
 end

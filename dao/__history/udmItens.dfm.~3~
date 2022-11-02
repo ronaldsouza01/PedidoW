@@ -1,0 +1,9 @@
+object DataModule2: TDataModule2
+  Height = 480
+  Width = 640
+  object fdqItens: TFDQuery
+    Connection = dmConexao.fdConexao
+    Left = 56
+    Top = 40
+  end
+end
