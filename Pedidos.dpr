@@ -6,8 +6,8 @@ uses
   udmConexao in 'dao\udmConexao.pas' {dmConexao: TDataModule},
   uPedidoModel in 'model\uPedidoModel.pas',
   uPedidoController in 'controller\uPedidoController.pas',
-  udmPedido in 'dao\udmPedido.pas' {DataModule1: TDataModule},
-  udmItens in 'dao\udmItens.pas' {DataModule2: TDataModule},
+  udmPedido in 'dao\udmPedido.pas' {dmPedido: TDataModule},
+  udmItens in 'dao\udmItens.pas' {dmItens: TDataModule},
   uItensModel in 'model\uItensModel.pas';
 
 {$R *.res}
@@ -17,7 +17,7 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TForm1, Form1);
   Application.CreateForm(TdmConexao, dmConexao);
-  Application.CreateForm(TDataModule1, DataModule1);
-  Application.CreateForm(TDataModule2, DataModule2);
+  Application.CreateForm(TdmPedido, dmPedido);
+  Application.CreateForm(TdmItens, dmItens);
   Application.Run;
 end.

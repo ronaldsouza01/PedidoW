@@ -1,8 +1,0 @@
-object DataModule2: TDataModule2
-  Height = 480
-  Width = 640
-  object FDQuery1: TFDQuery
-    Left = 56
-    Top = 40
-  end
-end

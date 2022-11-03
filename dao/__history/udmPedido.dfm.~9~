@@ -1,0 +1,96 @@
+object DataModule1: TDataModule1
+  Height = 193
+  Width = 446
+  object fdqPedidos: TFDQuery
+    Connection = dmConexao.fdConexao
+    SQL.Strings = (
+      'select * from pedido;')
+    Left = 48
+    Top = 32
+  end
+  object fdqPedido: TFDQuery
+    Connection = dmConexao.fdConexao
+    SQL.Strings = (
+      'select *'
+      'from pedido'
+      'where codpedido = :pcodpedido')
+    Left = 152
+    Top = 32
+    ParamData = <
+      item
+        Name = 'PCODPEDIDO'
+        FDDataType = dtInt32
+        ParamType = ptInput
+      end>
+  end
+  object fdqInsert: TFDQuery
+    Connection = dmConexao.fdConexao
+    SQL.Strings = (
+      'insert into pedido'
+      '(dtemissao,codcli,vltotal)'
+      'values'
+      '(:pdtemissao,:pcodcli,:pvltotal);')
+    Left = 248
+    Top = 32
+    ParamData = <
+      item
+        Name = 'PDTEMISSAO'
+        DataType = ftDate
+        ParamType = ptInput
+      end
+      item
+        Name = 'PCODCLI'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'PVLTOTAL'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+  end
+  object fdqUpdate: TFDQuery
+    Connection = dmConexao.fdConexao
+    SQL.Strings = (
+      'update pedido set'
+      'dtemissao = :pdtemissao,'
+      'codcli = :pcodcli,'
+      'vltotal = :pvltotal'
+      'where codpedido = :pcodpedido;')
+    Left = 344
+    Top = 32
+    ParamData = <
+      item
+        Name = 'PDTEMISSAO'
+        FDDataType = dtDate
+        ParamType = ptInput
+      end
+      item
+        Name = 'PCODCLI'
+        FDDataType = dtInt32
+        ParamType = ptInput
+      end
+      item
+        Name = 'PVLTOTAL'
+        FDDataType = dtDouble
+        ParamType = ptInput
+      end
+      item
+        Name = 'PCODPEDIDO'
+        FDDataType = dtInt32
+        ParamType = ptInput
+      end>
+  end
+  object cdsPesquisar: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'dspPesquisar'
+    Left = 40
+    Top = 120
+  end
+  object dspPesquisar: TDataSetProvider
+    DataSet = fdqPedidos
+    Left = 136
+    Top = 120
+  end
+end

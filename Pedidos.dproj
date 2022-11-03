@@ -110,12 +110,12 @@
         <DCCReference Include="model\uPedidoModel.pas"/>
         <DCCReference Include="controller\uPedidoController.pas"/>
         <DCCReference Include="dao\udmPedido.pas">
-            <Form>DataModule1</Form>
+            <Form>dmPedido</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="dao\udmItens.pas">
-            <Form>DataModule2</Form>
+            <Form>dmItens</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>

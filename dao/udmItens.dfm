@@ -1,20 +1,26 @@
-object DataModule2: TDataModule2
+object dmItens: TdmItens
   Height = 164
   Width = 583
   object fdqItens: TFDQuery
     Connection = dmConexao.fdConexao
     SQL.Strings = (
-      'select *'
-      'from itens'
-      'where codpedido = :pdocpedido;')
+      'select a.coditem, '
+      '       a.codpedido, '
+      #9'   a.codproduto, '
+      #9'   b.nmproduto,'
+      #9'   a.quantidade,'
+      #9'   a.vlunitario,'
+      #9'   a.vltotal'
+      'from itens a,'
+      '     produto b'
+      'where b.codproduto = a.codproduto'
+      'and a.codpedido = :pcodpedido;')
     Left = 56
     Top = 40
     ParamData = <
       item
-        Name = 'PDOCPEDIDO'
-        DataType = ftInteger
+        Name = 'PCODPEDIDO'
         ParamType = ptInput
-        Value = Null
       end>
   end
   object fdqInsert: TFDQuery
@@ -24,8 +30,8 @@ object DataModule2: TDataModule2
       '(codpedido,codproduto,quantidade,vlunitario,vlTotal)'
       'values'
       '(:pcodpedido,:pcodproduto,:pquantidade,:pvlunitario,:pvlTotal);')
-    Left = 160
-    Top = 40
+    Left = 432
+    Top = 48
     ParamData = <
       item
         Name = 'PCODPEDIDO'
@@ -63,8 +69,8 @@ object DataModule2: TDataModule2
       'vlunitario = :pvlunitario,'
       'vlTotal = :pvlTotal'
       'where coditem = :pcoditem;')
-    Left = 256
-    Top = 40
+    Left = 512
+    Top = 48
     ParamData = <
       item
         Name = 'PCODPEDIDO'
@@ -96,5 +102,52 @@ object DataModule2: TDataModule2
         DataType = ftInteger
         ParamType = ptInput
       end>
+  end
+  object dspItens: TDataSetProvider
+    DataSet = fdqItens
+    Left = 152
+    Top = 40
+  end
+  object cdsItens: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'dspItens'
+    Left = 232
+    Top = 40
+    object cdsItenscoditem: TLargeintField
+      DisplayLabel = 'Seq.'
+      FieldName = 'coditem'
+    end
+    object cdsItenscodpedido: TLargeintField
+      DisplayLabel = 'Pedido'
+      FieldName = 'codpedido'
+    end
+    object cdsItenscodproduto: TLargeintField
+      DisplayLabel = 'C'#243'd.Produto'
+      FieldName = 'codproduto'
+    end
+    object cdsItensnmproduto: TWideStringField
+      DisplayLabel = 'Produto'
+      FieldName = 'nmproduto'
+      Size = 100
+    end
+    object cdsItensquantidade: TBCDField
+      DisplayLabel = 'Qtd.'
+      FieldName = 'quantidade'
+      Precision = 9
+      Size = 2
+    end
+    object cdsItensvlunitario: TBCDField
+      DisplayLabel = 'R$ Unit'#225'rio'
+      FieldName = 'vlunitario'
+      Precision = 9
+      Size = 2
+    end
+    object cdsItensvltotal: TBCDField
+      DisplayLabel = 'R$ Total'
+      FieldName = 'vltotal'
+      Precision = 9
+      Size = 2
+    end
   end
 end
