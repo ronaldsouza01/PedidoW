@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls;
 
 type
-  TForm1 = class(TForm)
+  TfrmPrincipal = class(TForm)
     pnlRodape: TPanel;
     btnFechar: TButton;
     pnlCliente: TPanel;
@@ -34,18 +34,18 @@ type
   end;
 
 var
-  Form1: TForm1;
+  frmPrincipal: TfrmPrincipal;
 
 implementation
 
 {$R *.dfm}
 
-procedure TForm1.btnFecharClick(Sender: TObject);
+procedure TfrmPrincipal.btnFecharClick(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TForm1.FormKeyPress(Sender: TObject; var Key: Char);
+procedure TfrmPrincipal.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if key = #13 then
   begin

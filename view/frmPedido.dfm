@@ -1,4 +1,4 @@
-object Form1: TForm1
+object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
   Caption = 'Pedidos'
@@ -23,7 +23,8 @@ object Form1: TForm1
     BevelInner = bvLowered
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 907
+    ExplicitTop = 503
+    ExplicitWidth = 836
     object btnFechar: TButton
       Left = 755
       Top = 16
@@ -45,7 +46,7 @@ object Form1: TForm1
     Color = clSilver
     ParentBackground = False
     TabOrder = 1
-    ExplicitWidth = 907
+    ExplicitWidth = 836
     object lblCodigo: TLabel
       Left = 25
       Top = 2
@@ -150,9 +151,7 @@ object Form1: TForm1
     BevelInner = bvLowered
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 464
-    ExplicitTop = 232
-    ExplicitWidth = 185
-    ExplicitHeight = 41
+    ExplicitWidth = 836
+    ExplicitHeight = 398
   end
 end

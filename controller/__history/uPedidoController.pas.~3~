@@ -1,0 +1,30 @@
+unit uPedidoController;
+
+interface
+
+uses
+  uPedidoModel, udmPedido;
+
+type
+  TPedidoController = class
+  public
+    function InserirPedido(oPedido: TPedidoModel; var stErro: string): Boolean;
+    function AlterarPedido(oPedido: TPedidoModel; var stErro: string): Boolean;
+  end;
+implementation
+
+{ TPedidoController }
+
+function TPedidoController.AlterarPedido(oPedido: TPedidoModel;
+  var stErro: string): Boolean;
+begin
+  Result := dmPedido.Alterar(oPedido, stErro);
+end;
+
+function TPedidoController.InserirPedido(oPedido: TPedidoModel;
+  var stErro: string): Boolean;
+begin
+  Result := dmPedido.Inserir(oPedido, stErro);
+end;
+
+end.

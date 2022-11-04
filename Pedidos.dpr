@@ -2,7 +2,7 @@ program Pedidos;
 
 uses
   Vcl.Forms,
-  frmPedido in 'view\frmPedido.pas' {Form1},
+  frmPedido in 'view\frmPedido.pas' {frmPrincipal},
   udmConexao in 'dao\udmConexao.pas' {dmConexao: TDataModule},
   uPedidoModel in 'model\uPedidoModel.pas',
   uPedidoController in 'controller\uPedidoController.pas',
@@ -15,9 +15,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
   Application.CreateForm(TdmConexao, dmConexao);
-  Application.CreateForm(TdmPedido, dmPedido);
-  Application.CreateForm(TdmItens, dmItens);
   Application.Run;
 end.
