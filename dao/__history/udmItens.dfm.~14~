@@ -1,0 +1,153 @@
+object dmItens: TdmItens
+  Height = 164
+  Width = 583
+  object fdqItens: TFDQuery
+    Connection = dmConexao.fdConexao
+    SQL.Strings = (
+      'select a.coditem, '
+      '       a.codpedido, '
+      #9'   a.codproduto, '
+      #9'   b.nmproduto,'
+      #9'   a.quantidade,'
+      #9'   a.vlunitario,'
+      #9'   a.vltotal'
+      'from itens a,'
+      '     produto b'
+      'where b.codproduto = a.codproduto'
+      'and a.codpedido = :pcodpedido;')
+    Left = 56
+    Top = 40
+    ParamData = <
+      item
+        Name = 'PCODPEDIDO'
+        ParamType = ptInput
+      end>
+  end
+  object fdqInsert: TFDQuery
+    Connection = dmConexao.fdConexao
+    SQL.Strings = (
+      'insert into itens'
+      '(codpedido,codproduto,quantidade,vlunitario,vlTotal)'
+      'values'
+      '(:pcodpedido,:pcodproduto,:pquantidade,:pvlunitario,:pvlTotal);')
+    Left = 432
+    Top = 48
+    ParamData = <
+      item
+        Name = 'PCODPEDIDO'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'PCODPRODUTO'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'PQUANTIDADE'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'PVLUNITARIO'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'PVLTOTAL'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+  end
+  object fdqUpdate: TFDQuery
+    Connection = dmConexao.fdConexao
+    SQL.Strings = (
+      'update itens set'
+      'codpedido = :pcodpedido,'
+      'codproduto = :pcodproduto,'
+      'quantidade = :pquantidade,'
+      'vlunitario = :pvlunitario,'
+      'vlTotal = :pvlTotal'
+      'where coditem = :pcoditem;')
+    Left = 512
+    Top = 48
+    ParamData = <
+      item
+        Name = 'PCODPEDIDO'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'PCODPRODUTO'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'PQUANTIDADE'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'PVLUNITARIO'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'PVLTOTAL'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'PCODITEM'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object dspItens: TDataSetProvider
+    DataSet = fdqItens
+    Left = 152
+    Top = 40
+  end
+  object cdsItens: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'dspItens'
+    Left = 232
+    Top = 40
+    object cdsItenscoditem: TLargeintField
+      DisplayLabel = 'Seq.'
+      FieldName = 'coditem'
+    end
+    object cdsItenscodpedido: TLargeintField
+      DisplayLabel = 'Pedido'
+      FieldName = 'codpedido'
+    end
+    object cdsItenscodproduto: TLargeintField
+      DisplayLabel = 'C'#243'd.Produto'
+      FieldName = 'codproduto'
+    end
+    object cdsItensnmproduto: TWideStringField
+      DisplayLabel = 'Produto'
+      FieldName = 'nmproduto'
+      Size = 100
+    end
+    object cdsItensquantidade: TBCDField
+      DisplayLabel = 'Qtd.'
+      FieldName = 'quantidade'
+      Precision = 9
+      Size = 2
+    end
+    object cdsItensvlunitario: TBCDField
+      DisplayLabel = 'R$ Unit'#225'rio'
+      FieldName = 'vlunitario'
+      Precision = 9
+      Size = 2
+    end
+    object cdsItensvltotal: TBCDField
+      DisplayLabel = 'R$ Total'
+      FieldName = 'vltotal'
+      Precision = 9
+      Size = 2
+    end
+  end
+end

@@ -47,21 +47,24 @@ uses
 function TdmPedido.Alterar(oPedido: TPedidoModel;
   out sMensagem: string): Boolean;
 begin
-  fdqUpdate.Params[0].AsDate    := oPedido.dtemissao;
-  fdqUpdate.Params[1].AsInteger := oPedido.codcli;
-  fdqUpdate.Params[2].AsFloat   := oPedido.vltotal;
-  fdqUpdate.Params[3].AsInteger := oPedido.codpedido;
-  try
-    dmconexao.fdConexao.StartTransaction;
-    fdqUpdate.ExecSQL;
-    dmconexao.fdConexao.Commit;
-    Result := True;
-  except
-    on E: Exception do
-    begin
-      sMensagem := 'Erro ao alterar PEDIDO ' + E.Message;
-      dmConexao.fdConexao.Rollback;
-      Result := False;
+  with fdqUpdate do
+  begin
+    Params[0].AsDate    := oPedido.dtemissao;
+    Params[1].AsInteger := oPedido.codcli;
+    Params[2].AsFloat   := oPedido.vltotal;
+    Params[3].AsInteger := oPedido.codpedido;
+    try
+      dmconexao.fdConexao.StartTransaction;
+      ExecSQL;
+      dmconexao.fdConexao.Commit;
+      Result := True;
+    except
+      on E: Exception do
+      begin
+        sMensagem := 'Erro ao alterar PEDIDO ' + E.Message;
+        dmConexao.fdConexao.Rollback;
+        Result := False;
+      end;
     end;
   end;
 end;
@@ -73,7 +76,7 @@ var
 begin
   fdqPedido := TFDQuery.Create(nil);
   try
-    with fdqPedido do
+    with fdqPedido, opedido do
     begin
       Connection := dmConexao.fdConexao;
       SQL.Add('select *');
@@ -81,13 +84,10 @@ begin
       SQL.Add('where codpedido = :pcodpedido');
       ParamByName('pcodpedido').AsInteger := iCodPedido;
       Open;
-      with oPedido do
-      begin
-        codpedido := FieldByName('codpedido').AsInteger;
-        dtemissao := FieldByName('dtemissao').AsDateTime;
-        codcli    := FieldByName('codcli').AsInteger;
-        vltotal   := FieldByName('vltotal').AsFloat;
-      end;
+      codpedido := FieldByName('codpedido').AsInteger;
+      dtemissao := FieldByName('dtemissao').AsDateTime;
+      codcli    := FieldByName('codcli').AsInteger;
+      vltotal   := FieldByName('vltotal').AsFloat;
     end;
   finally
     FreeAndNil(fdqPedido);

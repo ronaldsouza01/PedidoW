@@ -1,0 +1,29 @@
+unit uProdutoController;
+
+interface
+
+uses uProdutoModel, udmProduto, System.SysUtils;
+
+type
+  TProdutoController = class
+  public
+    Constructor Create;
+    Destructor Destroy; override;
+  end;
+
+implementation
+
+{ TProdutoController }
+
+constructor TProdutoController.Create;
+begin
+  dmProduto := TDMProduto.Create(nil);
+end;
+
+destructor TProdutoController.Destroy;
+begin
+  FreeAndNil(dmProduto);
+  inherited;
+end;
+
+end.

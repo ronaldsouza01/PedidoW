@@ -122,6 +122,21 @@
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="model\uItensModel.pas"/>
+        <DCCReference Include="model\uClienteModel.pas"/>
+        <DCCReference Include="model\uProdutoModel.pas"/>
+        <DCCReference Include="dao\udmCliente.pas">
+            <Form>dmCliente</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="dao\udmProduto.pas">
+            <Form>dmProduto</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="controller\uItensController.pas"/>
+        <DCCReference Include="controller\uClienteController.pas"/>
+        <DCCReference Include="controller\uProdutoController.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

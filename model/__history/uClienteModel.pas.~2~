@@ -1,0 +1,24 @@
+unit uClienteModel;
+
+interface
+
+type
+
+TClienteModel = class
+private
+  fcodcli: integer;
+  fnmcliente: string;
+  fnmcidade: string;
+  fnmuf: string;
+protected
+  { protected declarations }
+public
+  { public declarations }
+  property codcli: integer read fcodcli write fcodcli;
+  property nmcliente: string read fnmcliente write fnmcliente;
+  property nmcidade: string read fnmcidade write fnmcidade;
+  property nmuf: string read fnmuf write fnmuf;
+  end;
+implementation
+
+end.

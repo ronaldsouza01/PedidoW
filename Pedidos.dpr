@@ -8,7 +8,14 @@ uses
   uPedidoController in 'controller\uPedidoController.pas',
   udmPedido in 'dao\udmPedido.pas' {dmPedido: TDataModule},
   udmItens in 'dao\udmItens.pas' {dmItens: TDataModule},
-  uItensModel in 'model\uItensModel.pas';
+  uItensModel in 'model\uItensModel.pas',
+  uClienteModel in 'model\uClienteModel.pas',
+  uProdutoModel in 'model\uProdutoModel.pas',
+  udmCliente in 'dao\udmCliente.pas' {dmCliente: TDataModule},
+  udmProduto in 'dao\udmProduto.pas' {dmProduto: TDataModule},
+  uItensController in 'controller\uItensController.pas',
+  uClienteController in 'controller\uClienteController.pas',
+  uProdutoController in 'controller\uProdutoController.pas';
 
 {$R *.res}
 

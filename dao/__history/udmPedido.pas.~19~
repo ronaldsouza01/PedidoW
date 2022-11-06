@@ -1,0 +1,149 @@
+unit udmPedido;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Datasnap.Provider,
+  Datasnap.DBClient, uPedidoModel;
+
+type
+  TdmPedido = class(TDataModule)
+    fdqPedidos: TFDQuery;
+    fdqInsert: TFDQuery;
+    fdqUpdate: TFDQuery;
+    cdsPesquisar: TClientDataSet;
+    dspPesquisar: TDataSetProvider;
+    cdsPesquisarcodpedido: TLargeintField;
+    cdsPesquisardtemissao: TDateField;
+    cdsPesquisarcodcli: TLargeintField;
+    cdsPesquisarvltotal: TBCDField;
+    cdsPesquisarnmcliente: TWideStringField;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    function RecuperaIDPedido: integer;
+    Procedure Pesquisar;
+    procedure Carregar(oPedido: TPedidoModel; iCodPedido: integer);
+    function Inserir(oPedido: TPedidoModel; out sMensagem: string): Boolean;
+    function Alterar(oPedido: TPedidoModel; out sMensagem: string): Boolean;
+  end;
+
+var
+  dmPedido: TdmPedido;
+
+implementation
+uses
+  udmConexao;
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+{ TDataModule1 }
+
+function TdmPedido.Alterar(oPedido: TPedidoModel;
+  out sMensagem: string): Boolean;
+begin
+  fdqUpdate.Params[0].AsDate    := oPedido.dtemissao;
+  fdqUpdate.Params[1].AsInteger := oPedido.codcli;
+  fdqUpdate.Params[2].AsFloat   := oPedido.vltotal;
+  fdqUpdate.Params[3].AsInteger := oPedido.codpedido;
+  try
+    dmconexao.fdConexao.StartTransaction;
+    fdqUpdate.ExecSQL;
+    dmconexao.fdConexao.Commit;
+    Result := True;
+  except
+    on E: Exception do
+    begin
+      sMensagem := 'Erro ao alterar PEDIDO ' + E.Message;
+      dmConexao.fdConexao.Rollback;
+      Result := False;
+    end;
+  end;
+end;
+
+procedure TdmPedido.Carregar(oPedido: TPedidoModel;
+  iCodPedido: integer);
+var
+  fdqPedido: TFDQuery;
+begin
+  fdqPedido := TFDQuery.Create(nil);
+  try
+    with fdqPedido do
+    begin
+      Connection := dmConexao.fdConexao;
+      SQL.Add('select *');
+      SQL.Add('from pedido');
+      SQL.Add('where codpedido = :pcodpedido');
+      ParamByName('pcodpedido').AsInteger := iCodPedido;
+      Open;
+      with oPedido do
+      begin
+        codpedido := FieldByName('codpedido').AsInteger;
+        dtemissao := FieldByName('dtemissao').AsDateTime;
+        codcli    := FieldByName('codcli').AsInteger;
+        vltotal   := FieldByName('vltotal').AsFloat;
+      end;
+    end;
+  finally
+    FreeAndNil(fdqPedido);
+  end;
+end;
+
+function TdmPedido.Inserir(oPedido: TPedidoModel;
+  out sMensagem: string): Boolean;
+begin
+  with fdqInsert, oPedido do
+  begin
+    Params[0].AsDate    := dtemissao;
+    Params[1].AsInteger := codcli;
+    Params[2].AsFloat   := vltotal;
+    try
+       dmConexao.fdConexao.StartTransaction;
+       ExecSQL;
+       dmConexao.fdConexao.Commit;
+       Result := True;
+    except
+      on E: Exception do
+      begin
+        sMensagem := 'Erro ao inserir PEDIDO ' + E.Message;
+        dmConexao.fdConexao.Rollback;
+        Result := False;
+      end;
+    end;
+  end;
+end;
+
+procedure TdmPedido.Pesquisar;
+begin
+  if cdsPesquisar.Active then
+    cdsPesquisar.Close;
+  cdsPesquisar.Open;
+  cdsPesquisar.First;
+end;
+
+function TdmPedido.RecuperaIDPedido: integer;
+var
+  fdqCodPedido: TFDQuery;
+begin
+   fdqCodPedido := TFDQuery.Create(nil);
+   try
+     with fdqCodPedido do
+     begin
+       Connection := dmConexao.fdConexao;
+       SQL.Add('select currtval(');
+       SQL.Add(QuotedStr('pedido_codpedido_seq') + ')');
+       SQL.Add(' as CodPedido;');
+       Open;
+       Result := FieldByName('CodPedido').AsInteger + 1;
+     end;
+   finally
+     FreeAndNil(fdqCodPedido);
+   end;
+end;
+
+end.

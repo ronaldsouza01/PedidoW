@@ -30,6 +30,7 @@ type
     procedure Pesquisar(iCodPedido: Integer);
     procedure Carregar(oItens: TItensModel; iCodItem: integer; iCodPedido: integer);
     function Inserir(oItens: TItensModel; out sMensagem: string): Boolean;
+    function Alterar(oItens: TItensModel; out sMensagem: string): Boolean;
   end;
 
 var
@@ -44,6 +45,28 @@ uses udmConexao;
 {$R *.dfm}
 
 { TDataModule2 }
+
+function TdmItens.Alterar(oItens: TItensModel; out sMensagem: string): Boolean;
+begin
+  fdqUpdate.Params[0].AsInteger := oItens.codpedido;
+  fdqUpdate.Params[1].AsInteger := oItens.codproduto;
+  fdqUpdate.Params[2].AsFloat   := oItens.quantidade;
+  fdqUpdate.Params[3].AsFloat   := oItens.vlunitario;
+  fdqUpdate.Params[4].AsFloat   := oItens.vlTotal;
+  try
+    dmConexao.fdConexao.StartTransaction;
+    fdqUpdate.ExecSQL;
+    dmConexao.fdConexao.Commit;
+    Result := True;
+  except
+    on E: exception do
+    begin
+      sMensagem := 'Erro ao alterar ITEM de pedido ' + E.Message;
+      dmConexao.fdConexao.Rollback;
+      Result := False;    
+    end;
+  end;
+end;
 
 procedure TdmItens.Carregar(oItens: TItensModel; iCodItem, iCodPedido: integer);
 var
@@ -78,7 +101,26 @@ end;
 
 function TdmItens.Inserir(oItens: TItensModel; out sMensagem: string): Boolean;
 begin
-
+  with fdqInsert, oItens do
+  begin
+    Params[0].AsInteger := codpedido;
+    Params[1].AsFloat   := quantidade;
+    Params[2].AsFloat   := vlunitario;
+    Params[3].AsFloat   := vlTotal;
+    try
+       dmconexao.fdConexao.StartTransaction;
+       ExecSQL;
+       dmconexao.fdConexao.Commit;
+       Result := True;
+    except
+       on E: exception do
+       begin
+          sMensagem := 'Erro ao inserir ITEM de pedido ' + E.Message;
+          dmConexao.fdConexao.Rollback;
+          Result := False;     
+       end;
+    end;
+  end;
 end;
 
 procedure TdmItens.Pesquisar(iCodPedido: Integer);

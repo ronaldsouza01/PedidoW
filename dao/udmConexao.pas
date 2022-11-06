@@ -15,6 +15,8 @@ type
     fdPostgres: TFDPhysPgDriverLink;
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     fdTransacao: TFDTransaction;
+    procedure DataModuleCreate(Sender: TObject);
+    procedure DataModuleDestroy(Sender: TObject);
   private
     { Private declarations }
   public
@@ -29,5 +31,15 @@ implementation
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
+procedure TdmConexao.DataModuleCreate(Sender: TObject);
+begin
+  fdConexao.Open;
+end;
+
+procedure TdmConexao.DataModuleDestroy(Sender: TObject);
+begin
+  fdConexao.Close;
+end;
 
 end.

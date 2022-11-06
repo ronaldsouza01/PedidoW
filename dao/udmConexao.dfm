@@ -1,4 +1,6 @@
 object dmConexao: TdmConexao
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
   Height = 130
   Width = 461
   object fdConexao: TFDConnection

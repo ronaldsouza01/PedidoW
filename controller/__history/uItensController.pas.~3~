@@ -1,0 +1,30 @@
+unit uItensController;
+
+interface
+
+uses uItensModel, udmItens, System.SysUtils;
+
+type
+  TItensController = class
+    public
+    Constructor Create;
+    Destructor Destroy; override;
+
+  end;
+
+implementation
+
+{ TItensController }
+
+constructor TItensController.Create;
+begin
+  dmItens := TdmItens.Create(nil);
+end;
+
+destructor TItensController.Destroy;
+begin
+  FreeAndNil(dmItens);
+  inherited;
+end;
+
+end.
