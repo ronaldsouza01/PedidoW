@@ -206,7 +206,6 @@ end;
 
 procedure TfrmPrincipal.FormShow(Sender: TObject);
 begin
-  cdsItens.Open;
   edtCodigo.SetFocus;
 end;
 
@@ -220,11 +219,6 @@ begin
   cdsItens.FieldByName('vltotal').AsFloat      := cdsItens.FieldByName('quantidade').AsFloat *
                                                   cdsItens.FieldByName('vlunitario').AsFloat;
   cdsItens.Post;
-  edtCodProduto.Text  := '';
-  edtNomeProduto.Text := '';
-  edtQtd.Text         := '';
-  edtValUnitario.Text := '';
-  edtCodProduto.SetFocus;
 end;
 
 end.

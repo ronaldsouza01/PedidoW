@@ -42,14 +42,12 @@ type
     procedure edtValUnitarioExit(Sender: TObject);
     procedure edtCodigoExit(Sender: TObject);
     procedure edtCodProdutoExit(Sender: TObject);
-    procedure btnIncluirClick(Sender: TObject);
   private
     { Private declarations }
     fCodCli: integer;
     fCodPed: Integer;
     procedure BuscaCliente(iCodCli: integer);
     procedure BuscaProduto(iCodPro: integer);
-    procedure InclueProduto;
   public
     { Public declarations }
   end;
@@ -67,11 +65,6 @@ uses udmConexao, uClienteController, uClienteModel, uProdutoController,
 procedure TfrmPrincipal.btnFecharClick(Sender: TObject);
 begin
   Close;
-end;
-
-procedure TfrmPrincipal.btnIncluirClick(Sender: TObject);
-begin
-  InclueProduto;
 end;
 
 procedure TfrmPrincipal.BuscaCliente(iCodCli: integer);
@@ -206,25 +199,7 @@ end;
 
 procedure TfrmPrincipal.FormShow(Sender: TObject);
 begin
-  cdsItens.Open;
   edtCodigo.SetFocus;
-end;
-
-procedure TfrmPrincipal.InclueProduto;
-begin
-  cdsItens.Insert;
-  cdsItens.FieldByName('codproduto').AsInteger := strtoint(edtCodproduto.Text);
-  cdsItens.FieldByName('quantidade').AsFloat   := StrToFloat(edtQtd.Text);
-  cdsItens.FieldByName('vlunitario').AsFloat   := strToFloat(edtValUnitario.Text);
-  cdsItens.FieldByName('nmproduto').AsString   := edtNomeProduto.Text;
-  cdsItens.FieldByName('vltotal').AsFloat      := cdsItens.FieldByName('quantidade').AsFloat *
-                                                  cdsItens.FieldByName('vlunitario').AsFloat;
-  cdsItens.Post;
-  edtCodProduto.Text  := '';
-  edtNomeProduto.Text := '';
-  edtQtd.Text         := '';
-  edtValUnitario.Text := '';
-  edtCodProduto.SetFocus;
 end;
 
 end.

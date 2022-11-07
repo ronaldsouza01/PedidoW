@@ -114,6 +114,7 @@ object frmPrincipal: TfrmPrincipal
       Width = 80
       Height = 23
       TabOrder = 2
+      OnExit = edtCodProdutoExit
       OnKeyPress = edtCodigoKeyPress
     end
     object edtNomeProduto: TEdit
@@ -151,6 +152,7 @@ object frmPrincipal: TfrmPrincipal
       Height = 41
       Caption = 'Incluir'
       TabOrder = 6
+      OnClick = btnIncluirClick
     end
   end
   object pnlGrid: TPanel
@@ -207,6 +209,13 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object cdsItens: TClientDataSet
+    PersistDataPacket.Data = {
+      810000009619E0BD01000000180000000500000000000300000081000A636F64
+      70726F6475746F04000100000000000A7175616E746964616465080004000000
+      00000A766C756E69746172696F080004000000000007766C546F74616C080004
+      0000000000096E6D70726F6475746F0100490000000100055749445448020002
+      0064000000}
+    Active = True
     Aggregates = <>
     Params = <>
     Left = 480
