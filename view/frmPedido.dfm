@@ -96,6 +96,7 @@ object frmPrincipal: TfrmPrincipal
       Width = 80
       Height = 23
       TabOrder = 0
+      OnExit = edtCodigoExit
       OnKeyPress = edtCodigoKeyPress
     end
     object edtNomeCliente: TEdit
@@ -105,7 +106,6 @@ object frmPrincipal: TfrmPrincipal
       Height = 23
       CharCase = ecUpperCase
       Enabled = False
-      ReadOnly = True
       TabOrder = 1
     end
     object edtCodProduto: TEdit
@@ -123,7 +123,6 @@ object frmPrincipal: TfrmPrincipal
       Height = 23
       CharCase = ecUpperCase
       Enabled = False
-      ReadOnly = True
       TabOrder = 3
     end
     object edtQtd: TEdit
