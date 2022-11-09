@@ -133,6 +133,7 @@ object frmPrincipal: TfrmPrincipal
       Height = 23
       Alignment = taRightJustify
       TabOrder = 4
+      OnExit = edtQtdExit
       OnKeyPress = edtCodigoKeyPress
     end
     object edtValUnitario: TEdit
@@ -151,6 +152,7 @@ object frmPrincipal: TfrmPrincipal
       Width = 69
       Height = 41
       Caption = 'Incluir'
+      Enabled = False
       TabOrder = 6
       OnClick = btnIncluirClick
     end
@@ -170,7 +172,7 @@ object frmPrincipal: TfrmPrincipal
       Left = 1
       Top = 1
       Width = 838
-      Height = 397
+      Height = 342
       Align = alClient
       DataSource = dsItens
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -180,16 +182,24 @@ object frmPrincipal: TfrmPrincipal
       TitleFont.Height = -12
       TitleFont.Name = 'Segoe UI'
       TitleFont.Style = []
+      OnKeyUp = dbgItensKeyUp
       Columns = <
         item
           Expanded = False
+          FieldName = 'codproduto'
+          Title.Caption = 'C'#243'digo'
+          Visible = True
+        end
+        item
+          Expanded = False
           FieldName = 'nmproduto'
-          Width = 420
+          Width = 350
           Visible = True
         end
         item
           Expanded = False
           FieldName = 'quantidade'
+          Width = 50
           Visible = True
         end
         item
@@ -206,6 +216,60 @@ object frmPrincipal: TfrmPrincipal
           Width = 150
           Visible = True
         end>
+    end
+    object pnlAcao: TPanel
+      Left = 1
+      Top = 343
+      Width = 838
+      Height = 55
+      Align = alBottom
+      BevelInner = bvLowered
+      BevelOuter = bvNone
+      TabOrder = 1
+      object lblTotal: TLabel
+        Left = 24
+        Top = 16
+        Width = 35
+        Height = 21
+        Caption = 'Total:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+      end
+      object lblValorTotal: TLabel
+        Left = 96
+        Top = 16
+        Width = 30
+        Height = 21
+        Caption = '0,00'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+      end
+      object btnGravar: TButton
+        Left = 755
+        Top = 8
+        Width = 69
+        Height = 41
+        Caption = 'Gravar'
+        Enabled = False
+        TabOrder = 0
+      end
+      object btnCancelar: TButton
+        Left = 656
+        Top = 8
+        Width = 69
+        Height = 41
+        Caption = 'Cancelar'
+        TabOrder = 1
+        OnClick = btnCancelarClick
+      end
     end
   end
   object cdsItens: TClientDataSet
