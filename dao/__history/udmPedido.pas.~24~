@@ -54,12 +54,15 @@ begin
     Params[2].AsFloat   := oPedido.vltotal;
     Params[3].AsInteger := oPedido.codpedido;
     try
+      dmconexao.fdConexao.StartTransaction;
       ExecSQL;
+      dmconexao.fdConexao.Commit;
       Result := True;
     except
       on E: Exception do
       begin
         sMensagem := 'Erro ao alterar PEDIDO ' + E.Message;
+        dmConexao.fdConexao.Rollback;
         Result := False;
       end;
     end;
@@ -100,12 +103,15 @@ begin
     Params[1].AsInteger := codcli;
     Params[2].AsFloat   := vltotal;
     try
+//       dmConexao.fdConexao.StartTransaction;
        ExecSQL;
+//       dmConexao.fdConexao.Commit;
        Result := True;
     except
       on E: Exception do
       begin
         sMensagem := 'Erro ao inserir PEDIDO ' + E.Message;
+//        dmConexao.fdConexao.Rollback;
         Result := False;
       end;
     end;
@@ -130,11 +136,10 @@ begin
      begin
        Connection := dmConexao.fdConexao;
        SQL.Add('select currval(');
-       SQL.Add('pg_get_serial_sequence(');
-       SQL.Add(QuotedStr('pedido') + ',' + QuotedStr('codpedido') + '))');
+       SQL.Add(QuotedStr('pedido_codpedido_seq') + ')');
        SQL.Add(' as CodPedido;');
        Open;
-       Result := FieldByName('CodPedido').AsInteger;
+       Result := FieldByName('CodPedido').AsInteger + 1;
      end;
    finally
      FreeAndNil(fdqCodPedido);

@@ -51,6 +51,11 @@ type
     procedure btnCancelarClick(Sender: TObject);
     procedure edtQtdExit(Sender: TObject);
     procedure dbgItensKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnGravarClick(Sender: TObject);
+    procedure dbgItensEnter(Sender: TObject);
+    procedure dbgItensExit(Sender: TObject);
+    procedure dbgItensKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     fCodCli: integer;
@@ -59,21 +64,39 @@ type
     procedure BuscaCliente(iCodCli: integer);
     procedure BuscaProduto(iCodPro: integer);
     procedure InclueProduto;
+    procedure AlteraProduto;
     procedure LimpaForm;
     procedure GravarPedido;
+    procedure RecalculaTotal;
   public
     { Public declarations }
   end;
 
+type
+  TOpe = (oInsert,oEdit);
 var
   frmPrincipal: TfrmPrincipal;
+  Opera: TOpe;
 
 implementation
 
 {$R *.dfm}
 
 uses udmConexao, uClienteController, uClienteModel, uProdutoController,
-  uProdutoModel;
+  uProdutoModel, uPedidoModel, uPedidoController, uItensController, uItensModel;
+
+procedure TfrmPrincipal.AlteraProduto;
+begin
+  cdsItens.Edit;
+  cdsItens.FieldByName('codproduto').AsInteger := strtoint(edtCodproduto.Text);
+  cdsItens.FieldByName('quantidade').AsFloat   := StrToFloat(edtQtd.Text);
+  cdsItens.FieldByName('vlunitario').AsFloat   := strToFloat(edtValUnitario.Text);
+  cdsItens.FieldByName('nmproduto').AsString   := edtNomeProduto.Text;
+  cdsItens.FieldByName('vltotal').AsFloat      := cdsItens.FieldByName('quantidade').AsFloat *
+                                                  cdsItens.FieldByName('vlunitario').AsFloat;
+  cdsItens.Post;
+  RecalculaTotal;
+end;
 
 procedure TfrmPrincipal.btnCancelarClick(Sender: TObject);
 begin
@@ -85,9 +108,21 @@ begin
   Close;
 end;
 
+procedure TfrmPrincipal.btnGravarClick(Sender: TObject);
+begin
+  GravarPedido;
+end;
+
 procedure TfrmPrincipal.btnIncluirClick(Sender: TObject);
 begin
-  InclueProduto;
+  if Opera = oInsert then
+  begin
+    InclueProduto;
+  end
+  else
+  begin
+    AlteraProduto;
+  end;
   btnIncluir.Enabled := False;
   if not btnGravar.Enabled then
   begin
@@ -156,6 +191,31 @@ begin
   end;
 end;
 
+procedure TfrmPrincipal.dbgItensEnter(Sender: TObject);
+begin
+   pnlRodape.Caption := '<INS> Inclue produto, <ENTER> Altera produto, <DEL> Exclue produto';
+end;
+
+procedure TfrmPrincipal.dbgItensExit(Sender: TObject);
+begin
+     pnlRodape.Caption := '';
+end;
+
+procedure TfrmPrincipal.dbgItensKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+  begin
+    Opera := oEdit;
+    btnIncluir.Caption  := 'Alterar';
+    edtCodProduto.Text  := cdsItens.FieldByName('codproduto').AsString;
+    edtNomeProduto.Text := cdsItens.FieldByName('nmproduto').AsString;
+    edtQtd.Text         := FloatToStr(cdsItens.FieldByName('quantidade').AsFloat);
+    edtValUnitario.Text := FloatToStr(cdsItens.FieldByName('vlunitario').AsFloat);
+    edtCodProduto.SetFocus;
+  end;
+end;
+
 procedure TfrmPrincipal.dbgItensKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -171,6 +231,26 @@ begin
         btnGravar.Enabled := False;
       end;
     end;
+  end
+  else if Key = VK_RETURN then
+  begin
+    Opera := oEdit;
+    btnIncluir.Caption  := 'Alterar';
+    edtCodProduto.Text  := cdsItens.FieldByName('codproduto').AsString;
+    edtNomeProduto.Text := cdsItens.FieldByName('nmproduto').AsString;
+    edtQtd.Text         := FloatToStr(cdsItens.FieldByName('quantidade').AsFloat);
+    edtValUnitario.Text := FloatToStr(cdsItens.FieldByName('vlunitario').AsFloat);
+    edtCodProduto.SetFocus;
+  end
+  else if Key = VK_INSERT then
+  begin
+    Opera := oInsert;
+    btnIncluir.Caption  := 'Incluir';
+    edtCodProduto.Text  := '';
+    edtNomeProduto.Text := '';
+    edtQtd.Text         := '';
+    edtValUnitario.Text := '';
+    edtCodProduto.SetFocus;
   end;
 end;
 
@@ -204,15 +284,6 @@ begin
   if edtCodProduto.Text <> '' then
   begin
     BuscaProduto(StrToInt(edtCodProduto.Text));
-//  end
-//  else
-//  begin
-//    if not btnFechar.Focused and
-//       not btnCancelar.Focused then
-//    begin
-//      ShowMessage('Informe o código do produto !');
-//      edtCodProduto.SetFocus;
-//    end;*/
   end;
 end;
 
@@ -268,13 +339,74 @@ begin
   cdsItens.Open;
   edtCodigo.SetFocus;
   fValTotal := 0.00;
+  Opera := oInsert;
 end;
 
 procedure TfrmPrincipal.GravarPedido;
+var
+  oPedidoModel: TPedidoModel;
+  oPedidoController: TPedidoController;
+  oItensModel: TItensModel;
+  oItensController: TItensController;
+  iCodPedido: Integer;
+  sErro: String;
+  sMensagem: String;
 begin
+  sMensagem := '';
+  sErro := '';
   cdsItens.DisableControls;
-
+  oPedidoModel := TPedidoModel.Create;
+  dmConexao.fdConexao.StartTransaction;
+  try
+    oPedidoModel.dtemissao := Date;
+    oPedidoModel.codcli    := StrToInt(edtCodigo.Text);
+    oPedidoModel.vltotal   := fValTotal;
+    oPedidoController := TPedidoController.Create;
+    try
+      oPedidoController.InserirPedido(oPedidoModel,sErro);
+      if sErro <> '' then
+      begin
+        sMensagem := sErro + #13 + #10;
+      end;
+      iCodPedido := oPedidoController.RecuperaIDPedido;
+    finally
+      FreeAndNil(oPedidoController);
+    end;
+  finally
+    FreeAndNil(oPedidoModel);
+  end;
+  oItensModel := TItensModel.Create;
+  try
+    oItensController := TItensController.Create;
+    cdsItens.First;
+    while not cdsItens.Eof do
+    begin
+      oItensModel.codpedido  := iCodPedido;
+      oItensModel.codproduto := cdsItens.FieldByName('codproduto').AsInteger;
+      oItensModel.quantidade := cdsItens.FieldByName('quantidade').AsFloat;
+      oItensModel.vlunitario := cdsItens.FieldByName('vlunitario').AsFloat;
+      oItensModel.vlTotal    := cdsItens.FieldByName('vltotal').AsFloat;
+      sErro := '';
+      oItensController.Inserir(oItensModel,sErro);
+      if sErro <> '' then
+      begin
+        sMensagem := sErro + #13 + #10;
+      end;
+      cdsItens.Next;
+    end;
+  finally
+    FreeAndnIl(oItensModel);
+  end;
   cdsItens.EnableControls;
+  if sMensagem <> '' then
+  begin
+    dmConexao.fdConexao.Rollback;
+    MessageDlg(sMensagem,TMsgDlgType.mtError,[mbOk],0,mbOK);
+  end
+  else
+  begin
+    dmConexao.fdConexao.CommitRetaining;
+  end;
   LimpaForm;
 end;
 
@@ -311,6 +443,24 @@ begin
   cdsItens.EnableControls;
   lblValorTotal.Caption := '0,00';
   btnIncluir.Enabled := False;
+end;
+
+procedure TfrmPrincipal.RecalculaTotal;
+var
+  iReg: integer;
+begin
+  iReg := cdsItens.RecNo;
+  cdsItens.DisableControls;
+  fValTotal := 0;
+  cdsItens.First;
+  while not cdsItens.Eof do
+  begin
+    fValTotal := fValTotal + cdsItens.FieldByName('vltotal').AsFloat;
+    cdsItens.Next;
+  end;
+  cdsItens.RecNo := iReg;
+  cdsItens.EnableControls;
+  lblValorTotal.Caption := FormatFloat('###,###,##0.00',fValTotal);
 end;
 
 end.

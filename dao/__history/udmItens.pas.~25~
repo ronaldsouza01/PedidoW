@@ -101,10 +101,9 @@ begin
   with fdqInsert, oItens do
   begin
     Params[0].AsInteger := codpedido;
-    Params[1].AsInteger := codproduto;
-    Params[2].AsFloat   := quantidade;
-    Params[3].AsFloat   := vlunitario;
-    Params[4].AsFloat   := vlTotal;
+    Params[1].AsFloat   := quantidade;
+    Params[2].AsFloat   := vlunitario;
+    Params[3].AsFloat   := vlTotal;
     try
        ExecSQL;
        Result := True;

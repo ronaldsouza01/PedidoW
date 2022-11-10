@@ -10,9 +10,8 @@ uses
   Datasnap.DBClient, uPedidoModel;
 
 type
-  TDataModule1 = class(TDataModule)
+  TdmPedido = class(TDataModule)
     fdqPedidos: TFDQuery;
-    fdqPedido: TFDQuery;
     fdqInsert: TFDQuery;
     fdqUpdate: TFDQuery;
     cdsPesquisar: TClientDataSet;
@@ -28,11 +27,13 @@ type
     { Public declarations }
     function RecuperaIDPedido: integer;
     Procedure Pesquisar;
-    procedure CarregarPedido(oPedido: TPedidoModel; iCodPedido: integer);
+    procedure Carregar(oPedido: TPedidoModel; iCodPedido: integer);
+    function Inserir(oPedido: TPedidoModel; out sMensagem: string): Boolean;
+    function Alterar(oPedido: TPedidoModel; out sMensagem: string): Boolean;
   end;
 
 var
-  DataModule1: TDataModule1;
+  dmPedido: TdmPedido;
 
 implementation
 uses
@@ -43,14 +44,36 @@ uses
 
 { TDataModule1 }
 
-procedure TDataModule1.CarregarPedido(oPedido: TPedidoModel;
+function TdmPedido.Alterar(oPedido: TPedidoModel;
+  out sMensagem: string): Boolean;
+begin
+  with fdqUpdate do
+  begin
+    Params[0].AsDate    := oPedido.dtemissao;
+    Params[1].AsInteger := oPedido.codcli;
+    Params[2].AsFloat   := oPedido.vltotal;
+    Params[3].AsInteger := oPedido.codpedido;
+    try
+      ExecSQL;
+      Result := True;
+    except
+      on E: Exception do
+      begin
+        sMensagem := 'Erro ao alterar PEDIDO ' + E.Message;
+        Result := False;
+      end;
+    end;
+  end;
+end;
+
+procedure TdmPedido.Carregar(oPedido: TPedidoModel;
   iCodPedido: integer);
 var
   fdqPedido: TFDQuery;
 begin
   fdqPedido := TFDQuery.Create(nil);
   try
-    with fdqPedido do
+    with fdqPedido, opedido do
     begin
       Connection := dmConexao.fdConexao;
       SQL.Add('select *');
@@ -58,20 +81,38 @@ begin
       SQL.Add('where codpedido = :pcodpedido');
       ParamByName('pcodpedido').AsInteger := iCodPedido;
       Open;
-      with oPedido do
-      begin
-        codpedido := FieldByName('codpedido').AsInteger;
-        dtemissao := FieldByName('dtemissao').AsDateTime;
-        codcli    := FieldByName('codcli').AsInteger;
-        vltotal   := FieldByName('vltotal').AsFloat;
-      end;
+      codpedido := FieldByName('codpedido').AsInteger;
+      dtemissao := FieldByName('dtemissao').AsDateTime;
+      codcli    := FieldByName('codcli').AsInteger;
+      vltotal   := FieldByName('vltotal').AsFloat;
     end;
   finally
     FreeAndNil(fdqPedido);
   end;
 end;
 
-procedure TDataModule1.Pesquisar;
+function TdmPedido.Inserir(oPedido: TPedidoModel;
+  out sMensagem: string): Boolean;
+begin
+  with fdqInsert, oPedido do
+  begin
+    Params[0].AsDate    := dtemissao;
+    Params[1].AsInteger := codcli;
+    Params[2].AsFloat   := vltotal;
+    try
+       ExecSQL;
+       Result := True;
+    except
+      on E: Exception do
+      begin
+        sMensagem := 'Erro ao inserir PEDIDO ' + E.Message;
+        Result := False;
+      end;
+    end;
+  end;
+end;
+
+procedure TdmPedido.Pesquisar;
 begin
   if cdsPesquisar.Active then
     cdsPesquisar.Close;
@@ -79,7 +120,7 @@ begin
   cdsPesquisar.First;
 end;
 
-function TDataModule1.RecuperaIDPedido: integer;
+function TdmPedido.RecuperaIDPedido: integer;
 var
   fdqCodPedido: TFDQuery;
 begin
@@ -88,7 +129,7 @@ begin
      with fdqCodPedido do
      begin
        Connection := dmConexao.fdConexao;
-       SQL.Add('select currtval(');
+       SQL.Add('select currval(');
        SQL.Add(QuotedStr('pedido_codpedido_seq') + ')');
        SQL.Add(' as CodPedido;');
        Open;

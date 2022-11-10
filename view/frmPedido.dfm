@@ -21,6 +21,7 @@ object frmPrincipal: TfrmPrincipal
     Width = 840
     Height = 66
     Align = alBottom
+    Alignment = taLeftJustify
     BevelInner = bvLowered
     BevelOuter = bvNone
     TabOrder = 0
@@ -182,6 +183,9 @@ object frmPrincipal: TfrmPrincipal
       TitleFont.Height = -12
       TitleFont.Name = 'Segoe UI'
       TitleFont.Style = []
+      OnEnter = dbgItensEnter
+      OnExit = dbgItensExit
+      OnKeyDown = dbgItensKeyDown
       OnKeyUp = dbgItensKeyUp
       Columns = <
         item
@@ -226,6 +230,8 @@ object frmPrincipal: TfrmPrincipal
       BevelInner = bvLowered
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 342
+      ExplicitWidth = 834
       object lblTotal: TLabel
         Left = 24
         Top = 16
@@ -260,6 +266,7 @@ object frmPrincipal: TfrmPrincipal
         Caption = 'Gravar'
         Enabled = False
         TabOrder = 0
+        OnClick = btnGravarClick
       end
       object btnCancelar: TButton
         Left = 656

@@ -51,6 +51,7 @@ type
     procedure btnCancelarClick(Sender: TObject);
     procedure edtQtdExit(Sender: TObject);
     procedure dbgItensKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnGravarClick(Sender: TObject);
   private
     { Private declarations }
     fCodCli: integer;
@@ -73,7 +74,7 @@ implementation
 {$R *.dfm}
 
 uses udmConexao, uClienteController, uClienteModel, uProdutoController,
-  uProdutoModel;
+  uProdutoModel, uPedidoModel, uPedidoController, uItensController, uItensModel;
 
 procedure TfrmPrincipal.btnCancelarClick(Sender: TObject);
 begin
@@ -85,10 +86,19 @@ begin
   Close;
 end;
 
+procedure TfrmPrincipal.btnGravarClick(Sender: TObject);
+begin
+  GravarPedido;
+end;
+
 procedure TfrmPrincipal.btnIncluirClick(Sender: TObject);
 begin
   InclueProduto;
   btnIncluir.Enabled := False;
+  if not btnGravar.Enabled then
+  begin
+    btnGravar.Enabled := True;
+  end;
 end;
 
 procedure TfrmPrincipal.BuscaCliente(iCodCli: integer);
@@ -162,6 +172,10 @@ begin
       fValTotal := fValTotal - cdsItens.FieldByName('vltotal').AsFloat;
       cdsItens.Delete;
       lblValorTotal.Caption := FormatFloat('###,###,##0.00',fValTotal);
+      if cdsItens.RecordCount = 0 then
+      begin
+        btnGravar.Enabled := False;
+      end;
     end;
   end;
 end;
@@ -196,15 +210,6 @@ begin
   if edtCodProduto.Text <> '' then
   begin
     BuscaProduto(StrToInt(edtCodProduto.Text));
-//  end
-//  else
-//  begin
-//    if not btnFechar.Focused and
-//       not btnCancelar.Focused then
-//    begin
-//      ShowMessage('Informe o código do produto !');
-//      edtCodProduto.SetFocus;
-//    end;*/
   end;
 end;
 
@@ -263,10 +268,70 @@ begin
 end;
 
 procedure TfrmPrincipal.GravarPedido;
+var
+  oPedidoModel: TPedidoModel;
+  oPedidoController: TPedidoController;
+  oItensModel: TItensModel;
+  oItensController: TItensController;
+  iCodPedido: Integer;
+  sErro: String;
+  sMensagem: String;
 begin
+  sMensagem := '';
+  sErro := '';
   cdsItens.DisableControls;
-
+  oPedidoModel := TPedidoModel.Create;
+  dmConexao.fdConexao.StartTransaction;
+  try
+    oPedidoModel.dtemissao := Date;
+    oPedidoModel.codcli    := StrToInt(edtCodigo.Text);
+    oPedidoModel.vltotal   := fValTotal;
+    oPedidoController := TPedidoController.Create;
+    try
+      oPedidoController.InserirPedido(oPedidoModel,sErro);
+      if sErro <> '' then
+      begin
+        sMensagem := sErro + #13 + #10;
+      end;
+      iCodPedido := oPedidoController.RecuperaIDPedido;
+    finally
+      FreeAndNil(oPedidoController);
+    end;
+  finally
+    FreeAndNil(oPedidoModel);
+  end;
+  oItensModel := TItensModel.Create;
+  try
+    oItensController := TItensController.Create;
+    cdsItens.First;
+    while not cdsItens.Eof do
+    begin
+      oItensModel.codpedido  := iCodPedido;
+      oItensModel.codproduto := cdsItens.FieldByName('codproduto').AsInteger;
+      oItensModel.quantidade := cdsItens.FieldByName('quantidade').AsFloat;
+      oItensModel.vlunitario := cdsItens.FieldByName('vlunitario').AsFloat;
+      oItensModel.vlTotal    := cdsItens.FieldByName('vltotal').AsFloat;
+      sErro := '';
+      oItensController.Inserir(oItensModel,sErro);
+      if sErro <> '' then
+      begin
+        sMensagem := sErro + #13 + #10;
+      end;
+      cdsItens.Next;
+    end;
+  finally
+    FreeAndnIl(oItensModel);
+  end;
   cdsItens.EnableControls;
+  if sMensagem <> '' then
+  begin
+    dmConexao.fdConexao.Rollback;
+    MessageDlg(sMensagem,TMsgDlgType.mtError,[mbOk],0,mbOK);
+  end
+  else
+  begin
+    dmConexao.fdConexao.CommitRetaining;
+  end;
   LimpaForm;
 end;
 

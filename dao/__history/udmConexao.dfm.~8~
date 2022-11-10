@@ -26,8 +26,6 @@ object dmConexao: TdmConexao
     Top = 24
   end
   object fdTransacao: TFDTransaction
-    Options.Isolation = xiReadCommitted
-    Options.AutoStop = False
     Connection = fdConexao
     Left = 377
     Top = 24

@@ -133,6 +133,7 @@ object frmPrincipal: TfrmPrincipal
       Height = 23
       Alignment = taRightJustify
       TabOrder = 4
+      OnExit = edtQtdExit
       OnKeyPress = edtCodigoKeyPress
     end
     object edtValUnitario: TEdit
@@ -151,6 +152,7 @@ object frmPrincipal: TfrmPrincipal
       Width = 69
       Height = 41
       Caption = 'Incluir'
+      Enabled = False
       TabOrder = 6
       OnClick = btnIncluirClick
     end
@@ -180,6 +182,7 @@ object frmPrincipal: TfrmPrincipal
       TitleFont.Height = -12
       TitleFont.Name = 'Segoe UI'
       TitleFont.Style = []
+      OnKeyUp = dbgItensKeyUp
       Columns = <
         item
           Expanded = False
@@ -223,6 +226,8 @@ object frmPrincipal: TfrmPrincipal
       BevelInner = bvLowered
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 342
+      ExplicitWidth = 834
       object lblTotal: TLabel
         Left = 24
         Top = 16
@@ -248,6 +253,24 @@ object frmPrincipal: TfrmPrincipal
         Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
+      end
+      object btnGravar: TButton
+        Left = 755
+        Top = 8
+        Width = 69
+        Height = 41
+        Caption = 'Gravar'
+        Enabled = False
+        TabOrder = 0
+      end
+      object btnCancelar: TButton
+        Left = 656
+        Top = 8
+        Width = 69
+        Height = 41
+        Caption = 'Cancelar'
+        TabOrder = 1
+        OnClick = btnCancelarClick
       end
     end
   end

@@ -54,13 +54,16 @@ begin
   fdqUpdate.Params[3].AsFloat   := oItens.vlunitario;
   fdqUpdate.Params[4].AsFloat   := oItens.vlTotal;
   try
+    dmConexao.fdConexao.StartTransaction;
     fdqUpdate.ExecSQL;
+    dmConexao.fdConexao.Commit;
     Result := True;
   except
     on E: exception do
     begin
       sMensagem := 'Erro ao alterar ITEM de pedido ' + E.Message;
-      Result := False;
+      dmConexao.fdConexao.Rollback;
+      Result := False;    
     end;
   end;
 end;
@@ -101,18 +104,20 @@ begin
   with fdqInsert, oItens do
   begin
     Params[0].AsInteger := codpedido;
-    Params[1].AsInteger := codproduto;
-    Params[2].AsFloat   := quantidade;
-    Params[3].AsFloat   := vlunitario;
-    Params[4].AsFloat   := vlTotal;
+    Params[1].AsFloat   := quantidade;
+    Params[2].AsFloat   := vlunitario;
+    Params[3].AsFloat   := vlTotal;
     try
+       dmconexao.fdConexao.StartTransaction;
        ExecSQL;
+       dmconexao.fdConexao.Commit;
        Result := True;
     except
        on E: exception do
        begin
           sMensagem := 'Erro ao inserir ITEM de pedido ' + E.Message;
-          Result := False;
+          dmConexao.fdConexao.Rollback;
+          Result := False;     
        end;
     end;
   end;
